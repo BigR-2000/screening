@@ -23,7 +23,7 @@ st.markdown("""
 #Haal de whitelist van e-mailadressen en wachtwoorden op uit de secret
 whitelist_credentials = {
     'niels.nederlof@ajax.nl': 'AFCA_1900!',
-    'remi.demesel@ugent.be': 'AFCA_1900!',
+    'r.demesel@ajax.nl': 'AFCA_1900!',
 }
 
 #secrets = st.secrets["whitelist_credentials"]
