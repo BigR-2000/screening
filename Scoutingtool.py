@@ -145,7 +145,7 @@ if user_email in whitelist_credentials:
                 rolescore = C[['Build up','Creating chances','Finishing','Defending', 'Rol Score']]
             return rolescore
         st.subheader('Datascreening-tool AFC Ajax')
-        st.divider()
+        #st.divider()
         st.write("")
         st.markdown('Description of the app:')      
         st.markdown("- This tool allows for comparing data of different players across various positions throughout the 2024 calendar year. It can be used to screen players based on their data output.")
@@ -154,7 +154,7 @@ if user_email in whitelist_credentials:
         st.markdown("- A description of all the metrics used can be found at https://dataglossary.wyscout.com.")
 
 
-        #st.divider()
+        st.divider()
         st.write("")
         st.write("")
 
