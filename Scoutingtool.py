@@ -154,12 +154,12 @@ if user_email in whitelist_credentials:
         st.markdown("- A description of all the metrics used can be found at https://dataglossary.wyscout.com.")
 
 
-        st.divider()
+        #st.divider()
         st.write("")
         st.write("")
 
-        options = st.sidebar.radio('Positie', options=['Vleugel Aanvallers', 'Spitsen', 'Aanvallende Middenvelders', 'Centrale Middenvelders', 'Vleugel Verdedigers', 'Centrale Verdedigers'])
-        if options == 'Vleugel Aanvallers':
+        options = st.sidebar.radio('Position', options=['Wingers', 'Strikers', 'Attacking Midfielders', 'Central Midfielders', 'Wingbacks', 'Central Defenders'])
+        if options == 'Wingers':
             df = pd.read_excel('w1.xlsx')
             df1 = pd.read_excel('w2.xlsx')
             df2 = pd.read_excel('w3.xlsx')
@@ -298,7 +298,7 @@ if user_email in whitelist_credentials:
         C.rename(columns={'Average pass length, m': 'Average pass length'}, inplace=True)
         C2 = C
         #C2 = C2.set_index('Player')
-        st.subheader("Percentile scores of the subset")
+        st.subheader("Percentile Scores of the Subset")
 
 
 
