@@ -149,7 +149,7 @@ if user_email in whitelist_credentials:
         st.write("")
         st.markdown('Description of the app:')      
         st.markdown("- This tool allows for comparing data of different players across various positions throughout the 2024 calendar year. It can be used to screen players based on their data output.")
-        st.markdown("- The players included are aged between 15 and 18, with both youth and professional leagues being considered.")
+        st.markdown("- The players are aged between 15 and 18, with both youth and professional leagues being considered.")
         st.markdown("- WyScout data is used, and only players who have played a minimum of 800 minutes are included to ensure the reliability of the data. All data is converted into averages per 90 minutes.")
         st.markdown("- A description of all the metrics used can be found at https://dataglossary.wyscout.com.")
 
