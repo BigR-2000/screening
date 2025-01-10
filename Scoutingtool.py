@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 from scipy.stats import percentileofscore
 
-st.set_page_config(page_title = 'Datascoutingstool AFC Ajax',
+st.set_page_config(page_title = 'Data-screening tool AFC Ajax',
                    page_icon = ':bar_chart:',
                    layout="wide")
 
