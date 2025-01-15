@@ -41,12 +41,26 @@ if user_email in whitelist_credentials:
         def title_with_icon(icon, title):
             st.markdown(f"<div class='title-wrapper'><div class='icon'>{icon}</div><h4>{title}</h4></div>", unsafe_allow_html=True)
 
+        @st.cache_data
+        def load_data(file_path):
+            return pd.read_excel(file_path)
+
+        @st.cache_data
+        def process_data(data):
+            data = data.drop_duplicates(subset='Player', keep='first')
+            data['Forward passes/ passes'] = data['Forward passes per 90'] / data['Passes per 90']
+            data['Goals - xG'] = data['Goals per 90'] - data['xG per 90']
+            return data
+
+
+        @st.cache_data
         def bereken_percentiel_score(B):
             percentiel_scores_dict = {}
             for kolomnaam in B.columns:
                 percentiel_scores_dict[kolomnaam] = B[kolomnaam].apply(lambda x: percentileofscore(B[kolomnaam], x))
             return pd.DataFrame(percentiel_scores_dict)
 
+        @st.cache_data
         def bereken_rolscore(C, wingertype):
 
             C['Build up'] = (C['Accurate passes, %']*0.15 + 
@@ -159,33 +173,12 @@ if user_email in whitelist_credentials:
 
         options = st.sidebar.radio('Position', options=['Wingers', 'Strikers', 'Attacking Midfielders', 'Central Midfielders', 'Wingbacks', 'Central Defenders'])
         if options == 'Wingers':
-            df = pd.read_excel('w1.xlsx')
-            df1 = pd.read_excel('w2.xlsx')
-            df2 = pd.read_excel('w3.xlsx')
-            df3 = pd.read_excel('w4.xlsx')
-            df4 = pd.read_excel('w5.xlsx')
-            df5 = pd.read_excel('w10.xlsx')
-            df6 = pd.read_excel('w11.xlsx')
-            df7 = pd.read_excel('w12.xlsx')
-            df8 = pd.read_excel('w13.xlsx')
-            df9 = pd.read_excel('w14.xlsx')
-            df10 = pd.read_excel('w15.xlsx')
-            df11 = pd.read_excel('w16.xlsx')
-            #winger = pd.concat([ df5, df6, df7, df8, df9, df10, df11], ignore_index=True)
-            all_players = pd.concat([df,df1,df2,df3, df4, df5, df6, df7, df8, df9, df10, df11], ignore_index=True)
-            #all_players = pd.read_excel('top.xlsx')
+            all_players = pd.concat([load_data(f'w{i}.xlsx') for i in range(1, 12)], ignore_index=True)
+        elif options == 'Strikers':
+            all_players = pd.concat([load_data(f'spitsU18_{i}.xlsx') for i in range(4)], ignore_index=True)
 
-        if options == 'Strikers':
-            df = pd.read_excel('spitsU18.xlsx')
-            df1 = pd.read_excel('spitsU18_1.xlsx')
-            df2 = pd.read_excel('spitsU18_2.xlsx')
-            df3 = pd.read_excel('spitsU18_3.xlsx')
-            all_players = pd.concat([df,df1,df2,df3], ignore_index=True)
-
-        A = all_players.drop_duplicates(subset='Player', keep='first')
-
-        A['Forward passes/ passes'] = A['Forward passes per 90'] / A['Passes per 90']
-        A['Goals - xG'] = A['Goals per 90'] - A['xG per 90']
+        A = process_data(all_players)
+        Profiles = A
         A_per = A
 
         col1, col2, col3, col4, col5, col6, col7 = st.columns([1.5, 0.25, 0.75, 0.25, 1.5, 0.25, 1.5])
@@ -265,7 +258,7 @@ if user_email in whitelist_credentials:
 
 
         Percentiles.rename(columns={'Average pass length, m': 'Average pass length'}, inplace=True)
-        Profiles = Percentiles
+        
 
         Percentiles = Percentiles.reset_index()
         Percentiles = Percentiles.set_index(['Player', 'Team', 'Position', 'Age'])
@@ -280,12 +273,15 @@ if user_email in whitelist_credentials:
                 if filter == 'passes per 90':
                     filter = 'Passes per 90'
                 slider = st.slider(filter, min_value=0, max_value=100, value=(0, 100))
-                Percentiles = Percentiles[(Percentiles[filter] >= slider[0]) & (C[filter] <= slider[1])]
+                Percentiles = Percentiles[(Percentiles[filter] >= slider[0]) & (Percentiles[filter] <= slider[1])]
 
         
 
         st.dataframe(Percentiles.round(1), height = 700)
-        
+        Profiles = Profiles.reset_index()
+        Profiles = Profiles.set_index(['Player', 'Team', 'Age'])
+        Profiles = bereken_percentiel_score(Profiles)
+
         if options == 'Wingers':
             winger_types = ['Inside forward', 'Technical winger', 'Dynamical winger']
             col1, col2 = st.columns([2, 2])
@@ -301,6 +297,10 @@ if user_email in whitelist_credentials:
             with col1:
                 wingertype = st.selectbox('type of winger', winger_types)
             Profiles = Profiles.reset_index()
+            if player_search:
+                Profiles = Profiles[(Profiles['Player'].isin(player_search))]
+            if team_search:
+                Profiles = Profiles[(Profiles['Team'].isin(team_search))]
             Profiles = Profiles.set_index(['Player', 'Team', 'Age'])
             rolescore = bereken_rolscore(Profiles, wingertype)
             rolscoreInside = bereken_rolscore(Profiles, 'Inside forward')
