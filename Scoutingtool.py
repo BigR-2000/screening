@@ -173,9 +173,9 @@ if user_email in whitelist_credentials:
 
         options = st.sidebar.radio('Position', options=['Wingers', 'Strikers', 'Attacking Midfielders', 'Central Midfielders', 'Wingbacks', 'Central Defenders'])
         if options == 'Wingers':
-            all_players = pd.concat([load_data(f'w{i}.xlsx') for i in range(1, 12)], ignore_index=True)
+            all_players = pd.concat([load_data(f'w{i}.xlsx') for i in range(1, 13)], ignore_index=True)
         elif options == 'Strikers':
-            all_players = pd.concat([load_data(f'spitsU18_{i}.xlsx') for i in range(4)], ignore_index=True)
+            all_players = pd.concat([load_data(f'spitsU18_{i}.xlsx') for i in range(1, 5)], ignore_index=True)
 
         A = process_data(all_players)
         Profiles = A
